@@ -345,6 +345,12 @@
                     <h3>Inside Out 2</h3>
                     <div class="movie-date">2024</div>
                 </div>
+                <!-- New Movie Item with Embedded Iframe -->
+                <div class="movie-item" data-title="Movie Title" data-iframe="https://www.2embed.cc/embed/tt6263850">
+                    <img src="newmovie/cover.png" alt="Movie Title">
+                    <h3>New Movie</h3>
+                    <div class="movie-date">Year</div>
+                </div>
             </div>
         </div>
     </main>
@@ -357,6 +363,7 @@
                 <source src="" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
+            <iframe id="iframePlayer" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen></iframe>
             <div class="controls">
                 <button class="btn" id="playPauseBtn">&#9658;</button>
                 <input type="range" id="progressSlider" class="progress-slider" value="0">
@@ -377,6 +384,7 @@
         // Modal functionality
         var modal = document.getElementById("myModal");
         var videoPlayer = document.getElementById("videoPlayer");
+        var iframePlayer = document.getElementById("iframePlayer");
         var playPauseBtn = document.getElementById("playPauseBtn");
         var progressSlider = document.getElementById("progressSlider");
         var volumeSlider = document.getElementById("volumeSlider");
@@ -388,10 +396,19 @@
         document.querySelectorAll('.movie-item').forEach(function(item) {
             item.addEventListener('click', function() {
                 var videoSrc = item.getAttribute('data-video');
-                videoPlayer.src = videoSrc;
+                var iframeSrc = item.getAttribute('data-iframe');
+                if (videoSrc) {
+                    videoPlayer.src = videoSrc;
+                    videoPlayer.style.display = 'block';
+                    iframePlayer.style.display = 'none';
+                    videoPlayer.play();
+                } else if (iframeSrc) {
+                    iframePlayer.src = iframeSrc;
+                    iframePlayer.style.display = 'block';
+                    videoPlayer.style.display = 'none';
+                }
                 modal.style.display = "flex";
                 document.body.classList.add('modal-active');
-                videoPlayer.play();
             });
         });
 
@@ -399,6 +416,7 @@
             modal.style.display = "none";
             document.body.classList.remove('modal-active');
             videoPlayer.pause();
+            iframePlayer.src = '';
         };
 
         window.onclick = function(event) {
@@ -406,6 +424,7 @@
                 modal.style.display = "none";
                 document.body.classList.remove('modal-active');
                 videoPlayer.pause();
+                iframePlayer.src = '';
             }
         };
 
