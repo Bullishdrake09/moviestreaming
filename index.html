@@ -195,6 +195,12 @@
             object-fit: contain;
         }
 
+        .modal iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
         .close {
             position: absolute;
             right: 10px;
@@ -326,7 +332,7 @@
             <h2>Featured Movies</h2>
             <div class="movie-container" id="movie-container">
                 <div class="movie-item" data-title="Venom: Let there be a carnage" data-video="https://archive.org/download/venom.-let-there-be-acarnage/Venom.LetThereBeACarnage.mp4">
-                    <img src="Venom.LetThereBeACarnage/cover.png" alt="Inside Out">
+                    <img src="Venom.LetThereBeACarnage/cover.png" alt="Venom: Let there be a carnage">
                     <h3>Venom: Let there be a carnage</h3>
                     <div class="movie-date">2021</div>
                 </div>
@@ -392,6 +398,7 @@
         var durationDisplay = document.getElementById("duration");
         var fullscreenBtn = document.getElementById("fullscreenBtn");
         var span = document.getElementsByClassName("close")[0];
+        var controls = document.querySelector('.controls');
 
         document.querySelectorAll('.movie-item').forEach(function(item) {
             item.addEventListener('click', function() {
@@ -401,11 +408,13 @@
                     videoPlayer.src = videoSrc;
                     videoPlayer.style.display = 'block';
                     iframePlayer.style.display = 'none';
+                    controls.style.display = 'flex';
                     videoPlayer.play();
                 } else if (iframeSrc) {
                     iframePlayer.src = iframeSrc;
                     iframePlayer.style.display = 'block';
                     videoPlayer.style.display = 'none';
+                    controls.style.display = 'none';
                 }
                 modal.style.display = "flex";
                 document.body.classList.add('modal-active');
@@ -477,16 +486,18 @@
             }
         });
 
-        // Show controls on hover
+        // Show controls on hover for video only
         modal.addEventListener('mousemove', function() {
-            document.querySelector('.controls').classList.add('show');
-            clearTimeout(hideControlsTimeout);
-            hideControlsTimeout = setTimeout(hideControls, 3000);
+            if (videoPlayer.style.display === 'block') {
+                controls.classList.add('show');
+                clearTimeout(hideControlsTimeout);
+                hideControlsTimeout = setTimeout(hideControls, 3000);
+            }
         });
 
         var hideControlsTimeout;
         function hideControls() {
-            document.querySelector('.controls').classList.remove('show');
+            controls.classList.remove('show');
         }
 
         // Filter movies based on search input
